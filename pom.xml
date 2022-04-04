@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.12.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.blogsystem</groupId>
+    <artifactId>personal-blog-system</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>sso-core</module>
+        <module>common</module>
+        <module>unified-authentication</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <lombok.version>1.18.22</lombok.version>
+        <common.version>0.0.1-SNAPSHOT</common.version>
+        <jedis.version>4.1.1</jedis.version>
+        <xuelimq.version>1.2.2</xuelimq.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blogsystem</groupId>
+                <artifactId>common</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-mq-client</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId></groupId>
+                        <artifactId></artifactId>
+                    </exclusion>
+                </exclusions>
+                <version>${xuelimq.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
