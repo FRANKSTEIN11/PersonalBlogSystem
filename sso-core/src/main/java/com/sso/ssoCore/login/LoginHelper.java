@@ -5,6 +5,7 @@ import com.sso.ssoCore.entity.SsoUser;
 import com.sso.ssoCore.helper.CookieStoreBrowserHelper;
 import com.sso.ssoCore.helper.SessionAndCookieHelper;
 import com.sso.ssoCore.helper.SessionStoreRedisHelper;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2022/3/6 0006
  * @Description 一个登录的应用层工具类, 包含登录, 登出, 检测是否登录三个方法
  */
+@Slf4j
 public class LoginHelper {
 
     /**
@@ -31,6 +33,7 @@ public class LoginHelper {
             throw new NullPointerException("-----------------cookieValue is null!");
         }
         CookieStoreBrowserHelper.set(response, Conf.COOKIE_KEY, cookieValue, ifRemember);
+        log.info("用户: " + ssoUser.getUserId() + " 下线成功");
     }
 
     /**
@@ -53,9 +56,9 @@ public class LoginHelper {
             throw new NullPointerException("-----------------userId is null!");
         }
 
-
         SessionStoreRedisHelper.remove(Integer.valueOf(userId));
         CookieStoreBrowserHelper.remove(request, response);
+        log.info("用户: " + userId + " 下线成功");
     }
 
     /**
@@ -67,6 +70,7 @@ public class LoginHelper {
     public static boolean checkLogin(HttpServletRequest request, HttpServletResponse response) {
         String cookieValue = CookieStoreBrowserHelper.getValue(request);
         if (cookieValue == null) {
+            log.info("用户无信息且未登录");
             return false;
         }
 
@@ -82,6 +86,7 @@ public class LoginHelper {
                 if (System.currentTimeMillis() - ssoUser.getCurrentStoreTime() > SessionStoreRedisHelper.getRedisExpireMinite() / 2) {
                     ssoUser.setCurrentStoreTime(System.currentTimeMillis());
                     SessionStoreRedisHelper.setex(ssoUser);
+                    log.info("用户: " + userId + " 已登录");
                     return true;
                 }
             }
@@ -89,6 +94,7 @@ public class LoginHelper {
 
         //如果redis中没有用户信息 或者 cookie和redis中用户的版本号不一样(别人登陆过),则移除当前浏览器的cookie
         CookieStoreBrowserHelper.remove(request, response);
+        log.info("用户: " + userId + " 未登录");
         return false;
     }
 

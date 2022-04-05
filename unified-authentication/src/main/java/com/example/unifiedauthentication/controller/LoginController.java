@@ -52,19 +52,16 @@ public class LoginController {
     }
 
     @RequestMapping("logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResultJson logout(HttpServletRequest request, HttpServletResponse response) {
         LoginHelper.logout(request, response);
-        System.out.println("登出成功");
-        return "登录成功";
+        return ResultJson.ok();
 
     }
 
     @RequestMapping("checkLogin")
-    public String checkLogin(HttpServletRequest request, HttpServletResponse response) {
-        boolean b = LoginHelper.checkLogin(request, response);
-        System.out.println("检测登录: " + b);
-        return "检测登录: " + b;
-
+    public ResultJson checkLogin(HttpServletRequest request, HttpServletResponse response) {
+        boolean bool = LoginHelper.checkLogin(request, response);
+        return ResultJson.r(bool);
     }
 
 }
