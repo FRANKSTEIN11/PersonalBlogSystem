@@ -6,8 +6,6 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -118,7 +116,7 @@ public class JedisUtil {
         return result;
     }
 
-    public static boolean setex(String key, String value, int seconds) {
+    public static boolean setex(String key, String value, long seconds) {
         boolean result = false;
         Jedis client = getInstance();
         try {
@@ -132,7 +130,7 @@ public class JedisUtil {
         return result;
     }
 
-    public static boolean setex(String key, Object object, int seconds) {
+    public static boolean setex(String key, Object object, long seconds) {
         boolean result = false;
         Jedis client = getInstance();
         try {
@@ -230,6 +228,35 @@ public class JedisUtil {
         return result;
     }
 
+    public static boolean incrBy(String key) {
+        boolean result = false;
+        Jedis client = getInstance();
+        try {
+            client.incrBy(key, 1);
+            result = true;
+        } finally {
+            if (client != null) {
+                client.close();
+            }
+        }
+        return result;
+    }
+
+    public static boolean decrBy(String key) {
+        boolean result = false;
+        Jedis client = getInstance();
+        try {
+            client.decrBy(key, 1);
+            result = true;
+        } finally {
+            if (client != null) {
+                client.close();
+            }
+        }
+        return result;
+    }
+
+
     private static byte[] serialize(Object object) {
         ObjectOutputStream oos = null;
         ByteArrayOutputStream baos = null;
@@ -279,22 +306,6 @@ public class JedisUtil {
         }
     }
 
-    private static volatile Map map;
-
-
-    public static void getHa() throws InterruptedException {
-        if (map == null) {
-            if (initLock.tryLock(2L, TimeUnit.SECONDS)) {
-                try {
-                    if (map == null) {
-                        map = new HashMap();
-                    }
-                } finally {
-                    initLock.unlock();
-                }
-            }
-        }
-    }
 
     public static void main(String[] args) {
         address = "127.0.0.1";

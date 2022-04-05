@@ -27,7 +27,6 @@
         <lombok.version>1.18.22</lombok.version>
         <common.version>0.0.1-SNAPSHOT</common.version>
         <jedis.version>4.1.1</jedis.version>
-        <xuelimq.version>1.2.2</xuelimq.version>
     </properties>
 
     <dependencyManagement>
@@ -41,17 +40,6 @@
                 <groupId>com.blogsystem</groupId>
                 <artifactId>common</artifactId>
                 <version>${common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.xuxueli</groupId>
-                <artifactId>xxl-mq-client</artifactId>
-                <exclusions>
-                    <exclusion>
-                        <groupId></groupId>
-                        <artifactId></artifactId>
-                    </exclusion>
-                </exclusions>
-                <version>${xuelimq.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

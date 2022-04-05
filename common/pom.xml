@@ -22,10 +22,7 @@
             <artifactId>lombok</artifactId>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-mq-client</artifactId>
-        </dependency>
+
     </dependencies>
 
 
