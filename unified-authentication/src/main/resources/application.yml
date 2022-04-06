@@ -12,4 +12,19 @@ spring:
         acknowledge-mode: manual
       simple:
         acknowledge-mode: manual
+  datasource:
+    url: jdbc:mysql://localhost:3306/personal_blog_system?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
+# mybatis-plus配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  typeAliasesPackage: com.example.entity
+  mapper-locations: classpath:mapper/*.xml
+  # 全局配置id自增 同时 主键自动回填
+  global-config:
+    db-config:
+      id-type: auto
