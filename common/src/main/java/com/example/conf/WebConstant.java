@@ -1,4 +1,4 @@
-package com.example.unifiedauthentication.conf;
+package com.example.conf;
 
 public class WebConstant {
     /**

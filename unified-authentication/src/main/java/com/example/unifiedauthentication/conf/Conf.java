@@ -42,6 +42,30 @@ public class Conf {
      * 超过登录限制提示
      */
     public static final String TIPS_OUT_LOGIN = "超过登录限制,请1小时之后再试!";
+    /**
+     * 超过注册限制提示
+     */
+    public static final String TIPS_OUT_REGISTER = "超过注册限制,请1小时之后再试!";
+    /**
+     * 普通用户roleId
+     */
+    public static final int NORMAL_ROLE_ID = 2;
 
-
+    /**
+     * Http头的key,用来获取客户端IP
+     */
+    public static final String[] HEADERS_TO_TRY = {
+            "X-Forwarded-For",
+            "Proxy-Client-IP",
+            "WL-Proxy-Client-IP",
+            "HTTP_X_FORWARDED_FOR",
+            "HTTP_X_FORWARDED",
+            "HTTP_X_CLUSTER_CLIENT_IP",
+            "HTTP_CLIENT_IP",
+            "HTTP_FORWARDED_FOR",
+            "HTTP_FORWARDED",
+            "HTTP_VIA",
+            "REMOTE_ADDR",
+            "X-Real-IP"
+    };
 }

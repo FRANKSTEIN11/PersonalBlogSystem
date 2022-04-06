@@ -1,13 +1,13 @@
 package com.example.unifiedauthentication.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.conf.ResultJson;
 import com.example.entity.Menu;
 import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.mapper.LoginDAO;
 import com.example.service.UserService;
 import com.example.unifiedauthentication.conf.Conf;
-import com.example.unifiedauthentication.conf.ResultJson;
 import com.example.unifiedauthentication.utils.CheckBlackListUtil;
 import com.sso.ssoCore.entity.SsoUser;
 import com.sso.ssoCore.login.LoginHelper;
@@ -86,6 +86,7 @@ public class LoginController {
 
     /**
      * 设置完整的SsoUser
+     *
      * @param user
      * @return
      */

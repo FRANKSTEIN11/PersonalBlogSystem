@@ -32,7 +32,27 @@ public class CheckBlackListUtil {
         return bool;
     }
 
+//---------------------------------------------------------------------------BlackList系列
+    /**
+     * 制作黑名单key
+     *
+     * @param id
+     * @return
+     */
+    public static String makeBlackListKey(int id) {
+        return Conf.BLACKLIST_LOGIN.concat(Conf.BLACKLIST_SYMBOL).concat(String.valueOf(id));
+    }
+
+    public static String makeBlackListKey(String id) {
+        return Conf.BLACKLIST_LOGIN.concat(Conf.BLACKLIST_SYMBOL).concat(id);
+    }
+
     public static boolean isInBlackList(int id) {
+        String blackListKey = makeBlackListKey(id);
+        return JedisUtil.exists(blackListKey);
+    }
+
+    public static boolean isInBlackList(String id) {
         String blackListKey = makeBlackListKey(id);
         return JedisUtil.exists(blackListKey);
     }
@@ -42,6 +62,13 @@ public class CheckBlackListUtil {
         String blackListKey = makeBlackListKey(id);
         JedisUtil.setex(blackListKey, "1", Conf.TIME_BLACKLIST);
     }
+
+    public static void setBlackList(String id) {
+        //如果登录次数超过5,直接加入黑名单
+        String blackListKey = makeBlackListKey(id);
+        JedisUtil.setex(blackListKey, "1", Conf.TIME_BLACKLIST);
+    }
+//----------------------------------------------------------------------------------------
 
     /**
      * 制作loginCountKey
@@ -57,17 +84,4 @@ public class CheckBlackListUtil {
         return Conf.LOGIN_COUNT.concat(Conf.COUNT_SYMBOL).concat(id);
     }
 
-    /**
-     * 制作黑名单key
-     *
-     * @param id
-     * @return
-     */
-    public static String makeBlackListKey(int id) {
-        return Conf.BLACKLIST_LOGIN.concat(Conf.BLACKLIST_SYMBOL).concat(String.valueOf(id));
-    }
-
-    public static String makeBlackListKey(String id) {
-        return Conf.BLACKLIST_LOGIN.concat(Conf.BLACKLIST_SYMBOL).concat(id);
-    }
 }
