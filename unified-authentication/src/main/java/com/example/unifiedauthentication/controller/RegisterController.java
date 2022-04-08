@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * @author yenanren
@@ -38,6 +35,7 @@ public class RegisterController {
         //获取客户端IP
         String clientIpAddress = getClientIpAddress(request);
         if (CheckBlackListUtil.isInBlackList(clientIpAddress)) {
+            log.warn("用户: " + clientIpAddress + "   " + Conf.TIPS_OUT_REGISTER);
             return ResultJson.error(Conf.TIPS_OUT_REGISTER);
         }
 
@@ -61,6 +59,7 @@ public class RegisterController {
 
     /**
      * 设置角色Role关联
+     *
      * @param user
      */
     public void setRefUserRole(User user) {
