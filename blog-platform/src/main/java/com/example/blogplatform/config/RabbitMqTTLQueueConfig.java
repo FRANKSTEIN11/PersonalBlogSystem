@@ -1,5 +1,6 @@
 package com.example.blogplatform.config;
 
+import com.example.blogplatform.conf.Conf;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -19,54 +20,56 @@ import java.util.Map;
 @Slf4j
 @Configuration
 public class RabbitMqTTLQueueConfig {
-
+    /**
+     * 队列元素存时长
+     */
+    private static final int TTL_TIME = 60000;
 
     @Bean
     public DirectExchange ttlDirectExchange() {
-        return new DirectExchange("ttl_direct_exchange", true, false);
+        return new DirectExchange(Conf.TTL_DIRECT_EXCHANGE, true, false);
     }
 
     @Bean
-    public Queue directTTLQueue() {
+    public Queue viewsDirectTTLQueue() {
         Map<String, Object> args = new HashMap<>();
-        args.put("x-message-ttl", 15000);
-        args.put("x-dead-letter-exchange", "dead_direct_exchange");
-        args.put("x-dead-letter-routing-key", "dead");
-        return new Queue("wangyi.ttl.direct.queue", true, false, false, args);
+        args.put("x-message-ttl", TTL_TIME);
+        args.put("x-dead-letter-exchange", Conf.DEAD_DIRECT_EXCHANGE);
+        args.put("x-dead-letter-routing-key", Conf.VIEWS_ROUTING_KEY);
+        return new Queue(Conf.VIEWS_TTL_DIRECT_QUEUE, true, false, false, args);
     }
 
     @Bean
-    public Binding ttlBings() {
-        return BindingBuilder.bind(directTTLQueue()).to(ttlDirectExchange()).with("ttl");
-    }
-
-
-    @Bean
-    public Queue emailDirectTTLQueue() {
+    public Queue thumbsupDirectTTLQueue() {
         Map<String, Object> args = new HashMap<>();
-        args.put("x-message-ttl", 5000);
-        args.put("x-dead-letter-exchange", "dead_direct_exchange");
-        args.put("x-dead-letter-routing-key", "email");
-        return new Queue("email.ttl.direct.queue", true, false, false, args);
+        args.put("x-message-ttl", TTL_TIME);
+        args.put("x-dead-letter-exchange", Conf.DEAD_DIRECT_EXCHANGE);
+        args.put("x-dead-letter-routing-key", Conf.THUMBSUP_ROUTING_KEY);
+        return new Queue(Conf.THUMBSUP_TTL_DIRECT_QUEUE, true, false, false, args);
     }
 
     @Bean
-    public Binding emailTTLBings() {
-        return BindingBuilder.bind(emailDirectTTLQueue()).to(ttlDirectExchange()).with("email");
-    }
-
-    @Bean
-    public Queue smsDirectTTLQueue() {
+    public Queue collectionDirectTTLQueue() {
         Map<String, Object> args = new HashMap<>();
-        args.put("x-message-ttl", 5000);
-        args.put("x-dead-letter-exchange", "dead_direct_exchange");
-        args.put("x-dead-letter-routing-key", "sms");
-        return new Queue("sms.ttl.direct.queue", true, false, false, args);
+        args.put("x-message-ttl", TTL_TIME);
+        args.put("x-dead-letter-exchange", Conf.DEAD_DIRECT_EXCHANGE);
+        args.put("x-dead-letter-routing-key", Conf.COLLECTION_ROUTING_KEY);
+        return new Queue(Conf.COLLECTION_TTL_DIRECT_QUEUE, true, false, false, args);
     }
 
     @Bean
-    public Binding smsTTLBings() {
-        return BindingBuilder.bind(smsDirectTTLQueue()).to(ttlDirectExchange()).with("sms");
+    public Binding viewsTTLBings() {
+        return BindingBuilder.bind(viewsDirectTTLQueue()).to(ttlDirectExchange()).with(Conf.VIEWS_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding thumbsupTTLBings() {
+        return BindingBuilder.bind(thumbsupDirectTTLQueue()).to(ttlDirectExchange()).with(Conf.THUMBSUP_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding collectionTTLBings() {
+        return BindingBuilder.bind(collectionDirectTTLQueue()).to(ttlDirectExchange()).with(Conf.COLLECTION_ROUTING_KEY);
     }
 
 }

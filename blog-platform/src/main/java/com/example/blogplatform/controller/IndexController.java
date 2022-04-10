@@ -21,8 +21,8 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("articleIndex")
-public class ArticleIndexController {
+@RequestMapping("index")
+public class IndexController {
 
     @Resource
     private ArticleService articleService;
@@ -46,7 +46,6 @@ public class ArticleIndexController {
      */
     @RequestMapping("recommandArticle")
     public ResultJson recommandArticle() {
-
         //从lruCache中获取
         LRUCache<String, ArticleIdAndTitleVO> lruCache = ArticleUtil.getLruCache();
         List<ArticleIdAndTitleVO> list = new ArrayList<>();
@@ -63,8 +62,7 @@ public class ArticleIndexController {
      */
     @RequestMapping("headLine")
     public ResultJson headLine() {
-
-        List<ArticleIdAndTitleVO> articleIdAndTitleVOS = articleService.selectHotPoint();
+        List<ArticleIdAndTitleVO> articleIdAndTitleVOS = articleService.selectHeadLine();
         return ResultJson.ok(articleIdAndTitleVOS);
     }
 
@@ -75,7 +73,6 @@ public class ArticleIndexController {
      */
     @RequestMapping("blackList")
     public ResultJson blackList() {
-
         List<UserIdAndNameVO> userIdAndNameVOS = userService.selectBlackList();
         return ResultJson.ok(userIdAndNameVOS);
 

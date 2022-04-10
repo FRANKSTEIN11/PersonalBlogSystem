@@ -1,5 +1,6 @@
 package com.example.blogplatform.config;
 
+import com.example.blogplatform.conf.Conf;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -20,36 +21,36 @@ public class RabbitMqDeadQueueConfig {
 
     @Bean
     public DirectExchange deadDirectExchange() {
-        return new DirectExchange("dead_direct_exchange", true, false);
+        return new DirectExchange(Conf.DEAD_DIRECT_EXCHANGE, true, false);
     }
 
     @Bean
-    public Queue directDeadQueue() {
-        return new Queue("wangyi.dead.direct.queue", true);
+    public Queue viewsDirectDeadQueue() {
+        return new Queue(Conf.VIEWS_DEAD_DIRECT_QUEUE, true);
     }
 
     @Bean
-    public Binding deadBinds() {
-        return BindingBuilder.bind(directDeadQueue()).to(deadDirectExchange()).with("dead");
+    public Queue thumbsupDirectDeadQueue() {
+        return new Queue(Conf.THUMBSUP_DEAD_DIRECT_QUEUE, true);
     }
 
     @Bean
-    public Queue emailDirectDeadQueue() {
-        return new Queue("email.dead.direct.queue", true);
+    public Queue collectionDirectDeadQueue() {
+        return new Queue(Conf.COLLECTION_DEAD_DIRECT_QUEUE, true);
     }
 
     @Bean
-    public Binding emailDeadBinds() {
-        return BindingBuilder.bind(emailDirectDeadQueue()).to(deadDirectExchange()).with("email");
+    public Binding viewsDeadBinds() {
+        return BindingBuilder.bind(viewsDirectDeadQueue()).to(deadDirectExchange()).with(Conf.VIEWS_ROUTING_KEY);
     }
 
     @Bean
-    public Queue smsDirectDeadQueue() {
-        return new Queue("sms.dead.direct.queue", true);
+    public Binding thumbsupDeadBinds() {
+        return BindingBuilder.bind(thumbsupDirectDeadQueue()).to(deadDirectExchange()).with(Conf.THUMBSUP_KEY);
     }
 
     @Bean
-    public Binding smsDeadBinds() {
-        return BindingBuilder.bind(smsDirectDeadQueue()).to(deadDirectExchange()).with("sms");
+    public Binding collectionDeadBinds() {
+        return BindingBuilder.bind(collectionDirectDeadQueue()).to(deadDirectExchange()).with(Conf.COLLECTION_KEY);
     }
 }

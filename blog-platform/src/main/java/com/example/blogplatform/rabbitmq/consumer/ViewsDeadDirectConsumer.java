@@ -36,18 +36,18 @@ public class ViewsDeadDirectConsumer {
         String redisKey = mqKeyAndValueVO.getRedisKey();
         String redisValue = mqKeyAndValueVO.getRedisValue();
 
-        String uuid = ArticleUtil.parseValueUuid(redisValue);
-
-        //如果uuid相等,那么说明是redis最后一次
-        if (uuid.equals(JedisUtil.getStringValue(redisKey))) {
+        //如果value相等,那么说明是redis最后一次
+        if (redisValue.equals(JedisUtil.getStringValue(redisKey))) {
             try {
                 //删除redis键
+                log.info("删除redisKey: " + redisKey);
                 JedisUtil.del(redisKey);
                 Integer count = ArticleUtil.parseValueCount(redisValue);
                 Integer articleId = Integer.valueOf(ArticleUtil.parseKeyArticleId(redisKey));
 
                 ViewsVO viewsVO = new ViewsVO(articleId,count);
                 //更新到数据库
+                log.info("更新到数据库: " + viewsVO);
                 articleService.updateViews(viewsVO);
 
                 channel.basicAck(tag, true);
@@ -62,6 +62,7 @@ public class ViewsDeadDirectConsumer {
         } else {
             //如果不相等,什么业务都不做
             try {
+                log.info("该请求不是最后一次请求,不更新到数据库");
                 channel.basicAck(tag, true);
             } catch (IOException e) {
                 try {

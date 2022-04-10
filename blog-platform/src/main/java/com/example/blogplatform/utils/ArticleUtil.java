@@ -4,11 +4,8 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.LRUCache;
 import com.example.blogplatform.conf.Conf;
 import com.example.vo.ArticleIdAndTitleVO;
-import com.sso.ssoCore.helper.CookieStoreBrowserHelper;
-import com.sso.ssoCore.helper.SessionAndCookieHelper;
 import com.sso.ssoCore.utils.JedisUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 /**
@@ -32,27 +29,23 @@ public class ArticleUtil {
     /**
      * views增加,通过延迟队列的限制xx秒(得到之后删除redis中的key),与该方法拿出count和默认限制刷新此处进行大小的判断,以此来限制
      *
-     * @param request
-     * @param articleId
-     * @return
+     * @param viewsKey
+     * @return redis中的value, 格式为 count:uuid
      */
-    public static String viewsIncr(HttpServletRequest request, Integer articleId) {
-        //获取userId
-        String cookieValue = CookieStoreBrowserHelper.getValue(request);
-        String userId = SessionAndCookieHelper.parseCookieValueToUserId(cookieValue);
-
-        //制作viewsKey
-        String viewsKey = makeViewsKey(userId, articleId);
+    public static String viewsIncr(String viewsKey) {
+        //判断redis是否存在
         if (JedisUtil.exists(viewsKey)) {
 
             //得到value值
             String value = JedisUtil.getStringValue(viewsKey);
             Integer count = parseValueCount(value);
+            count++;
+
+            //如果超过五次,就返回空
             if (count > Conf.DEFAULT_MAX) {
                 return null;
             }
             //重新设置value的count值;
-            count++;
             value = makeViewsValue(count);
 
             //储存到redis
@@ -64,6 +57,42 @@ public class ArticleUtil {
             return value;
         }
     }
+
+    public static String thumbsupIncr(String thumbsupKey, boolean exist) {
+        //判断redis是否存在
+        if (JedisUtil.exists(thumbsupKey)) {
+
+            //得到value值
+            String value = JedisUtil.getStringValue(thumbsupKey);
+            Integer count = parseValueCount(value);
+            count++;
+
+            //如果超过五次,就返回空
+            if (count > Conf.DEFAULT_MAX) {
+                return null;
+            }
+            //重新设置value的count值;
+            value = makeThumbsupValue(count);
+
+            //储存到redis
+            JedisUtil.set(thumbsupKey, value);
+            return value;
+        } else {
+            String value;
+            //存在的话,初始为0,不存在的话,初始为1
+            if (exist) {
+                value = makeThumbsupValue(Conf.DEFAULT_INIT - 1);
+            } else {
+                value = makeThumbsupValue(Conf.DEFAULT_INIT);
+            }
+
+            JedisUtil.set(thumbsupKey, value);
+            return value;
+        }
+    }
+
+
+//--------------------------------------------------------------------制作字符串
 
     /**
      * 生成的key为:  views:articleId:userId
@@ -88,6 +117,38 @@ public class ArticleUtil {
      * @return
      */
     public static String makeViewsValue(int count) {
+        String value = String.valueOf(count)
+                .concat(Conf.ARTICLE_SYMBOL)
+                .concat(UUID.randomUUID().toString().replaceAll("-", ""));
+        return value;
+    }
+
+    public static String makeThumbsupKey(String userId, Integer articleId) {
+        String viewsKey = Conf.THUMBSUP_KEY
+                .concat(Conf.ARTICLE_SYMBOL)
+                .concat(String.valueOf(articleId))
+                .concat(Conf.ARTICLE_SYMBOL)
+                .concat(userId);
+        return viewsKey;
+    }
+
+    public static String makeThumbsupValue(int count) {
+        String value = String.valueOf(count)
+                .concat(Conf.ARTICLE_SYMBOL)
+                .concat(UUID.randomUUID().toString().replaceAll("-", ""));
+        return value;
+    }
+
+    public static String makeCollectionKey(String userId, Integer articleId) {
+        String viewsKey = Conf.COLLECTION_KEY
+                .concat(Conf.ARTICLE_SYMBOL)
+                .concat(String.valueOf(articleId))
+                .concat(Conf.ARTICLE_SYMBOL)
+                .concat(userId);
+        return viewsKey;
+    }
+
+    public static String makeCollectioValue(int count) {
         String value = String.valueOf(count)
                 .concat(Conf.ARTICLE_SYMBOL)
                 .concat(UUID.randomUUID().toString().replaceAll("-", ""));

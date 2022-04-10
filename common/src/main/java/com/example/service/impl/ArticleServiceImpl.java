@@ -8,6 +8,7 @@ import com.example.vo.ArticleIdAndTitleVO;
 import com.example.vo.ViewsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,7 +26,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDAO, Article> impleme
     @Override
     public ArticleIdAndTitleVO selectArticleIdAndTitle(ArticleIdAndTitleVO articleIdAndTitleVO) {
         return articleDAO.selectArticleIdAndTitle(articleIdAndTitleVO);
-
     }
 
     @Override
@@ -39,6 +39,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDAO, Article> impleme
     }
 
     @Override
+    @Transactional
     public void updateViews(ViewsVO viewsVO) {
         articleDAO.updateViews(viewsVO);
     }
