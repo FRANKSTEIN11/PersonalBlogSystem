@@ -1,7 +1,7 @@
-package com.example.blogarticleplatform.controller;
+package com.example.blogplatform.controller;
 
 import cn.hutool.cache.impl.LRUCache;
-import com.example.blogarticleplatform.utils.ArticleUtil;
+import com.example.blogplatform.utils.ArticleUtil;
 import com.example.conf.ResultJson;
 import com.example.service.ArticleService;
 import com.example.service.UserService;
@@ -21,8 +21,9 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("index")
+@RequestMapping("articleIndex")
 public class ArticleIndexController {
+
     @Resource
     private ArticleService articleService;
 
@@ -47,7 +48,7 @@ public class ArticleIndexController {
     public ResultJson recommandArticle() {
 
         //从lruCache中获取
-        LRUCache<String, ArticleIdAndTitleVO> lruCache = ArticleUtil.lruCache;
+        LRUCache<String, ArticleIdAndTitleVO> lruCache = ArticleUtil.getLruCache();
         List<ArticleIdAndTitleVO> list = new ArrayList<>();
         for (ArticleIdAndTitleVO articleIdAndTitleVO : lruCache) {
             list.add(articleIdAndTitleVO);
@@ -79,4 +80,5 @@ public class ArticleIndexController {
         return ResultJson.ok(userIdAndNameVOS);
 
     }
+
 }

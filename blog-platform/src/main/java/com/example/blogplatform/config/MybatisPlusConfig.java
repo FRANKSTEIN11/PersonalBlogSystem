@@ -1,4 +1,4 @@
-package com.example.blogarticleplatform.config;
+package com.example.blogplatform.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

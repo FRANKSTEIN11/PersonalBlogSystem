@@ -1,8 +1,8 @@
-package com.example.blogarticleplatform.controller;
+package com.example.blogplatform.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.blogarticleplatform.conf.Conf;
-import com.example.blogarticleplatform.utils.ArticleUtil;
+import com.example.blogplatform.conf.Conf;
+import com.example.blogplatform.utils.ArticleUtil;
 import com.example.conf.ResultJson;
 import com.example.entity.Article;
 import com.example.service.*;
@@ -47,7 +47,7 @@ public class ArticleController {
         articleIdAndTitleVO.setTitle(article.getTitle());
 
         //设置LRU热点缓存
-        ArticleUtil.lruCache.put(String.valueOf(id), articleIdAndTitleVO);
+        ArticleUtil.getLruCache().put(String.valueOf(id), articleIdAndTitleVO);
         return ResultJson.ok(article);
     }
 
@@ -79,7 +79,7 @@ public class ArticleController {
         articleIdAndTitleVO.setTitle(article.getTitle());
 
         //设置LRU热点缓存
-        ArticleUtil.lruCache.put(String.valueOf(article.getArticleId()), articleIdAndTitleVO);
+        ArticleUtil.getLruCache().put(String.valueOf(article.getArticleId()), articleIdAndTitleVO);
 
         return ResultJson.r(bool);
     }

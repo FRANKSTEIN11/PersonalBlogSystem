@@ -1,4 +1,4 @@
-package com.example.blogarticleplatform.config;
+package com.example.blogplatform.config;
 
 import com.sso.ssoCore.conf.Conf;
 import com.sso.ssoCore.filter.SsoFilter;

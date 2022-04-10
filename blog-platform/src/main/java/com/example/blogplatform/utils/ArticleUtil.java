@@ -1,8 +1,8 @@
-package com.example.blogarticleplatform.utils;
+package com.example.blogplatform.utils;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.LRUCache;
-import com.example.blogarticleplatform.conf.Conf;
+import com.example.blogplatform.conf.Conf;
 import com.example.vo.ArticleIdAndTitleVO;
 
 /**
@@ -19,4 +19,7 @@ public class ArticleUtil {
 
     public static LRUCache<String, ArticleIdAndTitleVO> lruCache = CacheUtil.newLRUCache(7);
 
+    public static LRUCache<String, ArticleIdAndTitleVO> getLruCache() {
+        return lruCache;
+    }
 }

@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>com.blogsystem</groupId>
-    <artifactId>blog-article-platform</artifactId>
+    <artifactId>blog-platform</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>

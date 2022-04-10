@@ -1,4 +1,4 @@
-package com.example.blogarticleplatform.conf;
+package com.example.blogplatform.conf;
 
 /**
  * @author yenanren

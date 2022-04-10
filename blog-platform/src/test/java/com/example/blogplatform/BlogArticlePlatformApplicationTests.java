@@ -1,4 +1,4 @@
-package com.example.blogarticleplatform;
+package com.example.blogplatform;
 
 
 class BlogArticlePlatformApplicationTests {
