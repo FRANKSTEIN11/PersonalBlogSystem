@@ -1,6 +1,7 @@
 package com.example.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class Article implements Serializable {
     private Date createtime;
 
     private String content;
+
+    @TableField(exist = false)
+    private String uuid;
 
     private static final long serialVersionUID = 1L;
 }

@@ -5,6 +5,7 @@ import com.example.entity.Article;
 import com.example.mapper.ArticleDAO;
 import com.example.service.ArticleService;
 import com.example.vo.ArticleIdAndTitleVO;
+import com.example.vo.ViewsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDAO, Article> impleme
     @Override
     public List<ArticleIdAndTitleVO> selectHeadLine() {
         return articleDAO.selectHeadLine();
+    }
+
+    @Override
+    public void updateViews(ViewsVO viewsVO) {
+        articleDAO.updateViews(viewsVO);
     }
 
 

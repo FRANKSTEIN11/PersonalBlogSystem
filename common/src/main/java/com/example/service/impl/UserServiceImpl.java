@@ -27,4 +27,10 @@ public class UserServiceImpl extends ServiceImpl<UserDAO, User> implements UserS
         return userDAO.selectBlackList();
     }
 
+    @Override
+    public UserIdAndNameVO selectUserDetail(String userId) {
+        return userDAO.selectUserDetail(userId);
+    }
+
+
 }

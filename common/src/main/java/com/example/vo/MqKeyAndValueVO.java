@@ -8,15 +8,16 @@ import java.io.Serializable;
 
 /**
  * @author yenanren
- * @date 2022/4/8 0008
+ * @date 2022/4/10 0010
  * @Description
  */
-@Data
-public class ArticleIdAndTitleVO implements Serializable {
-    @TableId(type = IdType.AUTO)
-    private Integer articleId;
 
-    private String title;
+@Data
+public class MqKeyAndValueVO implements Serializable {
+
+    private String redisKey;
+
+    private String redisValue;
 
     private static final long serialVersionUID = 1L;
 }

@@ -1,14 +1,14 @@
 package com.example.entity;
 
-import java.io.Serializable;
-
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
- * @author 
- * 
+ * @author
  */
 @Data
 public class Thumbsup implements Serializable {
@@ -18,6 +18,9 @@ public class Thumbsup implements Serializable {
     private Integer articleId;
 
     private Integer userId;
+
+    @TableField(exist = false)
+    private String uuid;
 
     private static final long serialVersionUID = 1L;
 }

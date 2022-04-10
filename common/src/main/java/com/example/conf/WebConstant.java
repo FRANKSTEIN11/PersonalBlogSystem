@@ -16,7 +16,7 @@ public class WebConstant {
      * 分页默认参数
      */
     public final static String DEFAULT_PAGE_NO = "1";
-    public final static String DEFAULT_PAGE_SIZE = "20";
+    public final static String DEFAULT_PAGE_SIZE = "10";
 
 
     /**
