@@ -92,6 +92,38 @@ public class ArticleUtil {
     }
 
 
+    public static String collectionIncr(String collectionKey, boolean exist) {
+        //判断redis是否存在
+        if (JedisUtil.exists(collectionKey)) {
+
+            //得到value值
+            String value = JedisUtil.getStringValue(collectionKey);
+            Integer count = parseValueCount(value);
+            count++;
+
+            //如果超过五次,就返回空
+            if (count > Conf.DEFAULT_MAX) {
+                return null;
+            }
+            //重新设置value的count值;
+            value = makeThumbsupValue(count);
+
+            //储存到redis
+            JedisUtil.set(collectionKey, value);
+            return value;
+        } else {
+            String value;
+            //存在的话,初始为0,不存在的话,初始为1
+            if (exist) {
+                value = makeThumbsupValue(Conf.DEFAULT_INIT - 1);
+            } else {
+                value = makeThumbsupValue(Conf.DEFAULT_INIT);
+            }
+
+            JedisUtil.set(collectionKey, value);
+            return value;
+        }
+    }
 //--------------------------------------------------------------------制作字符串
 
     /**

@@ -29,4 +29,10 @@ public class ArticleMqServiceImpl implements ArticleMqService {
 
         rabbitTemplate.convertAndSend(Conf.TTL_DIRECT_EXCHANGE, Conf.THUMBSUP_ROUTING_KEY, mqKeyAndValueVO);
     }
+
+    @Override
+    public void insertCollectionMq(MqKeyAndValueVO mqKeyAndValueVO) {
+
+        rabbitTemplate.convertAndSend(Conf.TTL_DIRECT_EXCHANGE, Conf.COLLECTION_ROUTING_KEY, mqKeyAndValueVO);
+    }
 }

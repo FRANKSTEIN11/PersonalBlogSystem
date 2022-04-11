@@ -6,8 +6,10 @@ import com.example.blogplatform.rabbitmq.producer.ArticleMqService;
 import com.example.blogplatform.utils.ArticleUtil;
 import com.example.conf.ResultJson;
 import com.example.entity.Article;
+import com.example.entity.CollectionArticle;
 import com.example.entity.Thumbsup;
 import com.example.service.ArticleService;
+import com.example.service.CollectionService;
 import com.example.service.ThumbsupService;
 import com.example.vo.ArticleIdAndTitleVO;
 import com.example.vo.MqKeyAndValueVO;
@@ -36,6 +38,8 @@ public class ArticleController {
     private ArticleService articleService;
     @Resource
     private ThumbsupService thumbsupService;
+    @Resource
+    private CollectionService collectionService;
 
     @Resource
     private ArticleMqService articleMqService;
@@ -77,9 +81,8 @@ public class ArticleController {
 
     @RequestMapping("thumbsup")
     public ResultJson thumbsup(HttpServletRequest request, int articleId) {
-//        String cookieValue = CookieStoreBrowserHelper.getValue(request);
-//        String userId = SessionAndCookieHelper.parseCookieValueToUserId(cookieValue);
-        String userId = "1";
+        String cookieValue = CookieStoreBrowserHelper.getValue(request);
+        String userId = SessionAndCookieHelper.parseCookieValueToUserId(cookieValue);
         String thumbsupKey = ArticleUtil.makeThumbsupKey(userId, articleId);
 
 
@@ -96,12 +99,41 @@ public class ArticleController {
         }
 
         //发送到延迟队列
-        log.info("发送到延迟队列: thumbsup.ttl.direct.queue");
+        log.info("发送到延迟队列: " + Conf.THUMBSUP_TTL_DIRECT_QUEUE);
         MqKeyAndValueVO mqKeyAndValueVO = new MqKeyAndValueVO(thumbsupKey, thumbsupValue);
         articleMqService.insertThumbsupMq(mqKeyAndValueVO);
 
         return ResultJson.ok();
     }
+
+    @RequestMapping("collection")
+    public ResultJson collection(HttpServletRequest request, int articleId) {
+//        String cookieValue = CookieStoreBrowserHelper.getValue(request);
+//        String userId = SessionAndCookieHelper.parseCookieValueToUserId(cookieValue);
+        String userId = "1";
+        String collectionKey = ArticleUtil.makeCollectionKey(userId, articleId);
+
+
+        boolean isCollection;
+        if (JedisUtil.exists(collectionKey)) {
+            isCollection = false;
+        } else {
+            isCollection = isCollection(collectionKey);
+        }
+        //储存value到redis
+        String collectionValue = ArticleUtil.collectionIncr(collectionKey, isCollection);
+        if (collectionValue == null) {
+            return ResultJson.error();
+        }
+
+        //发送到延迟队列
+        log.info("发送到延迟队列: " + Conf.COLLECTION_TTL_DIRECT_QUEUE);
+        MqKeyAndValueVO mqKeyAndValueVO = new MqKeyAndValueVO(collectionKey, collectionValue);
+        articleMqService.insertCollectionMq(mqKeyAndValueVO);
+
+        return ResultJson.ok();
+    }
+
 
     @RequestMapping("update")
     public ResultJson updateArticle(Article article) {
@@ -135,6 +167,13 @@ public class ArticleController {
         return ResultJson.r(bool);
     }
 
+
+    /**
+     * 去数据库查询是否有点赞记录
+     *
+     * @param thumbsupKey
+     * @return
+     */
     public boolean isThumbsup(String thumbsupKey) {
         String articleId = ArticleUtil.parseKeyArticleId(thumbsupKey);
         String userId = ArticleUtil.parseKeyUserId(thumbsupKey);
@@ -142,5 +181,15 @@ public class ArticleController {
         queryWrapper.eq("article_id", articleId);
         queryWrapper.eq("user_id", userId);
         return thumbsupService.getOne(queryWrapper) != null;
+    }
+
+
+    public boolean isCollection(String collectionKey) {
+        String articleId = ArticleUtil.parseKeyArticleId(collectionKey);
+        String userId = ArticleUtil.parseKeyUserId(collectionKey);
+        QueryWrapper<CollectionArticle> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("article_id", articleId);
+        queryWrapper.eq("user_id", userId);
+        return collectionService.getOne(queryWrapper) != null;
     }
 }

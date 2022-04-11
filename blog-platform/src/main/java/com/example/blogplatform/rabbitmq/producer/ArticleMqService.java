@@ -11,4 +11,6 @@ public interface ArticleMqService {
     void updateViewsMq(MqKeyAndValueVO mqKeyAndValueVO);
 
     void insertThumbsupMq(MqKeyAndValueVO mqKeyAndValueVO);
+
+    void insertCollectionMq(MqKeyAndValueVO mqKeyAndValueVO);
 }
