@@ -1,34 +1,23 @@
-package com.example.blogplatform.aop;
+package com.example.aop;
 
 
-import com.example.conf.WebConstant;
-import com.sso.ssoCore.helper.CookieStoreBrowserHelper;
-import com.sso.ssoCore.helper.SessionAndCookieHelper;
+import com.example.conf.ResultJson;
+import com.example.utils.WordBlackListUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 
 @Slf4j
 @Aspect
 @Component
 @Order(0)
-public class UserAop {
+public class WordBlackListAop {
 
     //定义切点,注解为切入点
-    @Pointcut("within(com.example.blogplatform.controller.UserController..*)")
+    @Pointcut("@annotation(com.example.annonation.CheckWord)")
     public void viewRecordsPointCut() {
 
     }
@@ -69,22 +58,21 @@ public class UserAop {
          * 进行业务操作
          */
 
-        //从cookies中获取userId,和前端传来的id进行对比
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        String cookieValue = CookieStoreBrowserHelper.getValue(request);
-        String userId = SessionAndCookieHelper.parseCookieValueToUserId(cookieValue);
-//        if (userId.equals(id)) {
-//
-//        }
-//
-//        Object[] inputParameters = joinPoint.getArgs();        //入参
-//        for (Object inputParameter : inputParameters) {
-//            log.info("inputParameter:{}", inputParameter);
-//        }
+//        //从cookies中获取userId,和前端传来的id进行对比
+//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        HttpServletRequest request = attributes.getRequest();
+//        String cookieValue = CookieStoreBrowserHelper.getValue(request);
+//        String userId = SessionAndCookieHelper.parseCookieValueToUserId(cookieValue);
 
-
-
+        Object[] inputParameters = joinPoint.getArgs();        //入参
+        for (Object inputParameter : inputParameters) {
+            if (inputParameter != null) {
+                if (WordBlackListUtil.isContains(inputParameter.toString())) {
+                    log.info("存在敏感词!: " + inputParameter.toString());
+                    return ResultJson.error("存在敏感词!");
+                }
+            }
+        }
         return joinPoint.proceed();
     }
 

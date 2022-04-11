@@ -1,6 +1,7 @@
 package com.example.blogplatform.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.annonation.CheckWord;
 import com.example.blogplatform.conf.Conf;
 import com.example.blogplatform.rabbitmq.producer.ArticleMqService;
 import com.example.blogplatform.utils.ArticleUtil;
@@ -79,6 +80,13 @@ public class ArticleController {
         return ResultJson.ok(article);
     }
 
+    @CheckWord
+    @RequestMapping("test")
+    public ResultJson test(Article article) {
+        System.out.println("ok了");
+        return ResultJson.ok();
+    }
+
     @RequestMapping("thumbsup")
     public ResultJson thumbsup(HttpServletRequest request, int articleId) {
         String cookieValue = CookieStoreBrowserHelper.getValue(request);
@@ -108,9 +116,9 @@ public class ArticleController {
 
     @RequestMapping("collection")
     public ResultJson collection(HttpServletRequest request, int articleId) {
-//        String cookieValue = CookieStoreBrowserHelper.getValue(request);
-//        String userId = SessionAndCookieHelper.parseCookieValueToUserId(cookieValue);
-        String userId = "1";
+        String cookieValue = CookieStoreBrowserHelper.getValue(request);
+        String userId = SessionAndCookieHelper.parseCookieValueToUserId(cookieValue);
+//        String userId = "1";
         String collectionKey = ArticleUtil.makeCollectionKey(userId, articleId);
 
 
@@ -134,7 +142,7 @@ public class ArticleController {
         return ResultJson.ok();
     }
 
-
+    @CheckWord
     @RequestMapping("update")
     public ResultJson updateArticle(Article article) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
@@ -149,6 +157,7 @@ public class ArticleController {
         return ResultJson.r(bool);
     }
 
+    @CheckWord
     @RequestMapping("insert")
     public ResultJson insertArticle(Article article) {
         article.setVisible(Conf.VISIBLE_YES);

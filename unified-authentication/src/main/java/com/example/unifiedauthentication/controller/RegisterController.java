@@ -1,5 +1,6 @@
 package com.example.unifiedauthentication.controller;
 
+import com.example.annonation.CheckWord;
 import com.example.conf.ResultJson;
 import com.example.entity.RefUserRole;
 import com.example.entity.User;
@@ -30,6 +31,7 @@ public class RegisterController {
     @Resource
     private RefUserRoleService refUserRoleService;
 
+    @CheckWord
     @RequestMapping
     public ResultJson register(HttpServletRequest request, User user) {
         //获取客户端IP

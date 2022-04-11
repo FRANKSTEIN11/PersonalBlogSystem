@@ -19,6 +19,7 @@
         <module>sso-core</module>
         <module>common</module>
         <module>unified-authentication</module>
+        <module>blog-platform</module>
     </modules>
 
     <properties>

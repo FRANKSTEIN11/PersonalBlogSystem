@@ -21,8 +21,8 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("index")
-public class IndexController {
+@RequestMapping("indexArticle")
+public class IndexArticleController {
 
     @Resource
     private ArticleService articleService;
